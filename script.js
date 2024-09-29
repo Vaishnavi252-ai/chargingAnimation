@@ -1,51 +1,44 @@
-const chargeLevel = document.getElementById("charge-level");
-const charge = document.getElementById("charge");
-const chargingTimeRef = document.getElementById("charging-time");
+document.addEventListener("DOMContentLoaded", () => {
+    const batteryLevelElem = document.getElementById("battery-level");
+    const chargeLevelElem = document.getElementById("charge-level");
+    const chargingTimeElem = document.getElementById("charging-time");
+    const chargingIconElem = document.getElementById("charging-icon");
 
-window.onload = () => {
-    if(!navigator.getBattery) {
-        alert("Battery status Api is not supported in your Browser");
+    if (!navigator.getBattery) {
+        alert("Battery status API is not supported in your Browser");
         return false;
     }
-};
 
-navigator.getBattery().then((battery) => {
-    function updateAllBatteryInfo() {
-        updateChargingInfo();
-        updateLevelInfo();
-    }
-    updateAllBatteryInfo();
+    navigator.getBattery().then((battery) => {
+        function updateBatteryInfo() {
+            // Update charge level
+            const batteryLevel = Math.floor(battery.level * 100);
+            batteryLevelElem.style.width = `${batteryLevel}%`;
+            chargeLevelElem.textContent = `${batteryLevel}%`;
 
-battery.addEventListener("chargingchange", () => {
-    updateAllBatteryInfo();
-});
-
-battery.addEventListener("levelchange", () => {
-    updateAllBatteryInfo();
-});
-
-function updateChargingInfo() {
-    if (battery.charging) {
-        charge.classList.add("active");
-        chargingTimeRef.innerText = "";
-    }else {
-        charge.classList.remove("active");
-
-
-        if (parseInt(battery.dischargingTime)) {
-         
-            let hr = parseInt(battery.dischargingTime / 3600);
-            let min = parseInt(battery.dischargingTime / 60 - hr * 60);
-            chargingTimeRef.innerText = `${hr}hr ${min}mins remaining`;
+            // Update charging time
+            if (battery.charging) {
+                batteryLevelElem.classList.add("battery-charging");
+                chargingIconElem.style.display = "block";
+                chargingTimeElem.textContent = "";
+            } else {
+                batteryLevelElem.classList.remove("battery-charging");
+                chargingIconElem.style.display = "none";
+                if (battery.dischargingTime && battery.dischargingTime > 0) {
+                    let hr = Math.floor(battery.dischargingTime / 3600);
+                    let min = Math.floor((battery.dischargingTime % 3600) / 60);
+                    chargingTimeElem.textContent = `${hr}hr ${min}mins remaining`;
+                } else {
+                    chargingTimeElem.textContent = "Calculating time remaining...";
+                }
+            }
         }
-    }
-} 
 
-function updateLevelInfo() {
-    
-    let batteryLevel = `${parseInt(battery.level * 100)}%`;
-    charge.style.width = batteryLevel;
-    chargeLevel.textContent = batteryLevel;
-}
+        updateBatteryInfo();
 
+        battery.addEventListener("chargingchange", updateBatteryInfo);
+        battery.addEventListener("levelchange", updateBatteryInfo);
+    }).catch(error => {
+        console.log("Error accessing battery API:", error);
+    });
 });
