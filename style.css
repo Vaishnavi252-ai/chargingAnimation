@@ -1,46 +1,64 @@
-.battery-top{
-  width: 30px;
-  height: 10px;
-  background: black;
-  margin: 0 auto;
-  border: 3px solid silver;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+* Ensure the body takes full height and centers content */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e0e0e0; 
 }
-.battery-content {
-  width: 150px;
-  height: 250px;
-  background: black;
+
+/* Battery container styling */
+.battery-container {
+  text-align: center;
+}
+
+/* Styling for the battery element */
+.battery {
   position: relative;
-  margin: 0 auto;
-  border: 3px solid silver;
-  border-radius: 18px;
+  width: 200px;
+  height: 100px;
+  border: 5px solid #333;
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.charge{
-  width: 100%;
+
+/* Battery level inside */
+.battery-level {
   position: absolute;
-  bottom: 0;
-  border-radius: 14px;
-  animation: battery 8s linear infinite;
+  top: 5px;
+  left: 5px;
+  height: 90%;
+  border-radius: 10px;
+  background-color: #4caf50; 
+  width: 50%; 
+  transition: width 0.5s ease; 
 }
-.charge-level{
-  position: absolute;
-  font-size: 30px;
-  font-weight: 100px;
-  color: black;
-  text-align: center;
-  margin: 50px;
-  padding-top: 60px;
+
+/* Battery status text styling */
+.battery-status {
+  margin-top: 10px;
 }
-.charging-time{
-  text-align: center;
-  font-size: 50px;
-  margin-top: 50px;
+
+#charge-level {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
 }
-.active{
-  animation: charge-animation 3s infinite linear;
+
+#charging-time {
+  font-size: 16px;
+  color: #555;
 }
-@keyframes battery {
+
+/* Adding some visual flair for charging */
+.battery-charging .battery-level {
+  animation: pulse 1.5s infinite; /* Pulsing effect for charging */
+}
+
+/* Keyframes for pulsing animation */
+@keyframes pulse {
   0%{
     height: 0%;
     background: red
@@ -62,3 +80,19 @@
     background: rgb(0, 255, 0);
   }
 }
+
+/* Charging icon styling */
+.charging-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: #ffeb3b;
+  display: none; /* Hide by default */
+}
+
+.battery-charging .charging-icon {
+  display: block; /* Show when charging */
+}
+
